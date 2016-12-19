@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">TestAppKotlin</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="movie_type">movieType</string>
+    <string name="movie_key">b5e36407ac13f5c793429ca973ae2ca3</string>
+
+    <string name="kontakt_io_api_key">dKaQwrNNiiSDXgOjQRnDbDMigMnOtbTn</string>
+    <string name="action_popular">Popular Movies</string>
+    <string name="action_top_rated">Top Rated</string>
+    <string name="action_upcoming">Upcoming Movies</string>
+</resources>
