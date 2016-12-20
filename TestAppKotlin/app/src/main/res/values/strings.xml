@@ -12,7 +12,12 @@
     <string name="movie_key">b5e36407ac13f5c793429ca973ae2ca3</string>
 
     <string name="kontakt_io_api_key">dKaQwrNNiiSDXgOjQRnDbDMigMnOtbTn</string>
-    <string name="action_popular">Popular Movies</string>
+    <string name="release_date">Release Date</string>
+    <string name="rating">Rating</string>
+    <string name="votes">Votes</string>
+    <string name="overview">Synopsis</string>
+    <string name="action_popular">Popular</string>
     <string name="action_top_rated">Top Rated</string>
-    <string name="action_upcoming">Upcoming Movies</string>
+    <string name="action_upcoming">Upcoming</string>
+    <string name="poster">Poster</string>
 </resources>

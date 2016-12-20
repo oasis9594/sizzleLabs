@@ -1,6 +1,7 @@
 package com.example.dell.testappkotlin
 
 
+import android.content.ContentValues
 import android.content.Context
 import android.graphics.Color
 import android.net.ConnectivityManager
@@ -9,7 +10,6 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
 import android.util.Log
 import android.view.*
@@ -118,6 +118,21 @@ class PopularMovies : Fragment() {
                     for (o in myMovieList) {
                         movieObjects.add(o)
                         Log.v(TAG, o.original_title)
+
+                        //Now add in database
+                        val values = ContentValues()
+                        values.put(MovieContract.MovieEntry.COL_TITLE, o.original_title)
+                        values.put(MovieContract.MovieEntry.COL_OVERVIEW, o.overview)
+                        values.put(MovieContract.MovieEntry.COL_POSTER, o.posterPath)
+                        values.put(MovieContract.MovieEntry.COL_POPULARITY, o.popularity)
+                        values.put(MovieContract.MovieEntry.COL_LANGUAGE, o.language)
+                        values.put(MovieContract.MovieEntry.COL_RATING, o.rating)
+                        values.put(MovieContract.MovieEntry.COL_VOTE_COUNT, o.vote_count)
+                        if (o.isAdult)values.put(MovieContract.MovieEntry.COL_ADULT, 1)else values.put(MovieContract.MovieEntry.COL_ADULT, 0)
+
+                        val inserted = context.contentResolver.insert(MovieContract.MovieEntry.CONTENT_URI, values)
+                        val id = MovieContract.MovieEntry.getIdFromUri(inserted)
+                        o.id=id
                     }
                     Log.v(TAG, "" + movieObjects.size)
                     movieAdapter.notifyDataSetChanged()

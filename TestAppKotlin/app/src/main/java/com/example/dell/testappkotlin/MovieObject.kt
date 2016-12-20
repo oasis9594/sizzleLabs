@@ -1,7 +1,7 @@
 package com.example.dell.testappkotlin
 
 class MovieObject {
-    var id: Int=0
+    var id: Long=0
     var original_title: String?=null
     var overview:String?=null
     var language:String?=null

@@ -8,19 +8,18 @@ import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.net.Uri
-import android.util.Log
-import java.util.*
 
-class BeaconProvider : ContentProvider() {
+
+class MovieProvider : ContentProvider() {
     override fun delete(uri: Uri?, selection: String?, selectionArgs: Array<out String>?): Int {
-        val db = mOpenHelper?.writableDatabase
-        val match = sUriMatcher.match(uri)
+        val db = MovieProvider.mOpenHelper?.writableDatabase
+        val match = MovieProvider.sUriMatcher.match(uri)
         val deleted: Int
 
         val customSelection = selection ?: "1"
 
         when (match) {
-            TASK -> deleted = db!!.delete(BeaconContract.BeaconEntry.TABLE_NAME, customSelection, selectionArgs)
+            MovieProvider.TASK -> deleted = db!!.delete(MovieContract.MovieEntry.TABLE_NAME, customSelection, selectionArgs)
             else -> throw UnsupportedOperationException("Unknown uri: $uri")
         }
 
@@ -30,28 +29,30 @@ class BeaconProvider : ContentProvider() {
 
         return deleted
     }
+
+
     override fun getType(uri: Uri?): String? {
-        val match: Int = sUriMatcher.match(uri)
+        val match: Int = MovieProvider.sUriMatcher.match(uri)
 
         when (match) {
-            TASK_WITH_ID -> return BeaconContract.BeaconEntry.CONTENT_ITEM_TYPE
-            TASK -> return BeaconContract.BeaconEntry.CONTENT_TYPE
+            MovieProvider.TASK_WITH_ID -> return MovieContract.MovieEntry.CONTENT_ITEM_TYPE
+            MovieProvider.TASK -> return MovieContract.MovieEntry.CONTENT_TYPE
             else -> throw UnsupportedOperationException("Unknown uri: $uri")
         }
     }
 
     override fun insert(uri: Uri?, values: ContentValues?): Uri? {
-        val db = mOpenHelper?.writableDatabase
-        val match: Int = sUriMatcher.match(uri)
+        val db = MovieProvider.mOpenHelper?.writableDatabase
+        val match: Int = MovieProvider.sUriMatcher.match(uri)
         val insertionUri: Uri?
         val insertedId: Long
 
         when (match) {
-            TASK -> {
-                insertedId = db!!.insert(BeaconContract.BeaconEntry.TABLE_NAME, null, values)
+            MovieProvider.TASK -> {
+                insertedId = db!!.insert(MovieContract.MovieEntry.TABLE_NAME, null, values)
 
                 insertionUri = if (insertedId > 0) {
-                    BeaconContract.BeaconEntry.buildWithId(insertedId)
+                    MovieContract.MovieEntry.buildWithId(insertedId)
                 } else {
                     throw SQLException("Failed to insert row into $uri")
                 }
@@ -64,26 +65,26 @@ class BeaconProvider : ContentProvider() {
     }
 
     override fun onCreate(): Boolean {
-        mOpenHelper = BeaconDbHelper(context)
+        MovieProvider.mOpenHelper = MovieDbHelper(context)
         return true
     }
 
     override fun query(uri: Uri?, projection: Array<out String>?,
                        selection: String?, selectionArgs: Array<out String>?,
                        sortOrder: String?): Cursor? {
-        val db: SQLiteDatabase = mOpenHelper?.readableDatabase as SQLiteDatabase
-        val match: Int = sUriMatcher.match(uri)
+        val db: SQLiteDatabase = MovieProvider.mOpenHelper?.readableDatabase as SQLiteDatabase
+        val match: Int = MovieProvider.sUriMatcher.match(uri)
         val cursor: Cursor?
 
         when (match) {
-            TASK -> {
-                cursor = db.query(BeaconContract.BeaconEntry.TABLE_NAME, projection,
+            MovieProvider.TASK -> {
+                cursor = db.query(MovieContract.MovieEntry.TABLE_NAME, projection,
                         selection, selectionArgs, null, null, sortOrder)
             }
-            TASK_WITH_ID -> {
-                val id: Long = BeaconContract.BeaconEntry.getIdFromUri(uri as Uri)
-                cursor = db.query(BeaconContract.BeaconEntry.TABLE_NAME, projection,
-                        "${BeaconContract.BeaconEntry._ID} = ?", arrayOf(id.toString()), null, null, sortOrder)
+            MovieProvider.TASK_WITH_ID -> {
+                val id: Long = MovieContract.MovieEntry.getIdFromUri(uri as Uri)
+                cursor = db.query(MovieContract.MovieEntry.TABLE_NAME, projection,
+                        "${MovieContract.MovieEntry._ID} = ?", arrayOf(id.toString()), null, null, sortOrder)
             }
             else -> throw UnsupportedOperationException("Unknown uri: $uri")
         }
@@ -94,12 +95,12 @@ class BeaconProvider : ContentProvider() {
 
     override fun update(uri: Uri?, values: ContentValues?, selection: String?,
                         selectionArgs: Array<out String>?): Int {
-        val db = mOpenHelper?.writableDatabase
-        val match = sUriMatcher.match(uri)
+        val db = MovieProvider.mOpenHelper?.writableDatabase
+        val match = MovieProvider.sUriMatcher.match(uri)
         val updated: Int
 
         when (match) {
-            TASK -> updated = db!!.update(BeaconContract.BeaconEntry.TABLE_NAME, values, selection, selectionArgs)
+            MovieProvider.TASK -> updated = db!!.update(MovieContract.MovieEntry.TABLE_NAME, values, selection, selectionArgs)
             else -> throw UnsupportedOperationException("Unknown uri: $uri")
         }
 
@@ -108,17 +109,16 @@ class BeaconProvider : ContentProvider() {
         }
         return updated
     }
-
     companion object {
-        val TASK = 100
-        val TASK_WITH_ID = 101
+        val TASK = 102
+        val TASK_WITH_ID = 103
 
         fun createUriMatcher(): UriMatcher {
-            var matcher: UriMatcher = UriMatcher(UriMatcher.NO_MATCH)
-            val authority = BeaconContract.CONTENT_AUTHORITY
+            val matcher: UriMatcher = UriMatcher(UriMatcher.NO_MATCH)
+            val authority = MovieContract.CONTENT_AUTHORITY
 
-            matcher.addURI(authority, BeaconContract.TASK_PATH, TASK)
-            matcher.addURI(authority, "${BeaconContract.TASK_PATH}/#", TASK_WITH_ID)
+            matcher.addURI(authority, MovieContract.TASK_PATH, TASK)
+            matcher.addURI(authority, "${MovieContract.TASK_PATH}/#", TASK_WITH_ID)
 
             return matcher
         }
@@ -126,5 +126,4 @@ class BeaconProvider : ContentProvider() {
         val sUriMatcher: UriMatcher = createUriMatcher()
         var mOpenHelper: SQLiteOpenHelper? = null
     }
-
 }

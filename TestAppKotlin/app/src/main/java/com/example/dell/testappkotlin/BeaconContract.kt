@@ -18,7 +18,6 @@ object BeaconContract {
         val TABLE_NAME = "beacons"
 
         val _ID = BaseColumns._ID
-        val _COUNT = BaseColumns._COUNT
         val COL_TITLE = "title"
         val COL_DESCRIPTION = "description"
 

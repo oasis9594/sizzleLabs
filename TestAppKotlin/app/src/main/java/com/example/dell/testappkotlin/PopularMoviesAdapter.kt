@@ -50,6 +50,11 @@ class PopularMoviesAdapter(internal var myMovies: ArrayList<MovieObject>) : Recy
 
             override fun showMovieDetails(v: View, pos: Int) {
                 //Show detailed activity of movie
+                if( mContext!=null)
+                {
+                    val movie = myMovies.get(pos)
+                    mContext!!.startActivity(Intent(mContext, MovieDetails::class.java).putExtra("id", movie.id))
+                }
             }
         })
         Log.v(TAG, "onCreateViewHolder2");
